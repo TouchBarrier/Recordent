@@ -1,38 +1,63 @@
-.home-container {
-    text-align: center;
-    margin-top: 100px;
+/* Header styling */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #282c34; /* Dark background for the header */
+  color: white; /* Text color */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  position: sticky;
+  top: 0;
+  z-index: 1000; /* Ensure header is on top */
+}
+
+/* Logo styling */
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.logo h1 {
+  margin: 0;
+  color: #61dafb; /* Logo color */
+}
+
+/* Header buttons container */
+.header-buttons {
+  display: flex;
+  gap: 10px; /* Spacing between buttons */
+}
+
+/* Button styling */
+.header-buttons .btn {
+  padding: 8px 16px;
+  background-color: #61dafb; /* Button background */
+  color: white; /* Button text color */
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Hover effect */
+}
+
+.header-buttons .btn:hover {
+  background-color: #21a1f1; /* Lighter blue on hover */
+  transform: scale(1.05); /* Slight scale-up on hover */
+}
+
+/* Responsive styling for smaller screens */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
   }
-  
-  .home-container h1 {
-    font-size: 36px;
-    color: #333;
+
+  .header-buttons {
+    margin-top: 10px;
+    width: 100%;
+    justify-content: flex-end;
   }
-  
-  .home-container p {
-    font-size: 18px;
-    color: #777;
-  }
-  
-  .button-container {
-    margin-top: 20px;
-  }
-  
-  button.btn {
-    background-color: #007bff;
-    color: white;
-    padding: 15px 30px;
-    margin: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 18px;
-  }
-  
-  button.btn:hover {
-    background-color: #0056b3;
-  }
-  
-  button.btn:focus {
-    outline: none;
-  }
-  
+}

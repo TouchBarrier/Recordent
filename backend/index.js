@@ -1,66 +1,93 @@
+// index.js (Node.js backend)
 const express = require('express');
-const cors = require('cors');
-const multer = require('multer');
-const xlsx = require('xlsx');
-const pdfkit = require('pdfkit');
+const bcrypt = require('bcryptjs');
+const mysql = require('mysql2');
 const jwt = require('jsonwebtoken');
+const cors = require('cors');
 const app = express();
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json()); // for parsing application/json
 
-// Mock employee data for demonstration
-let employees = [
-  { id: 1, name: 'John Doe', department: 'HR', salary: 5000 },
-  { id: 2, name: 'Jane Smith', department: 'Engineering', salary: 6000 },
-];
+// MySQL connection
+const db = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'Sweety@143', // replace with your MySQL root password
+  database: 'recordant',
+});
 
-// Route to get all employees
-app.get('/api/employees', (req, res) => {
-  const token = req.headers['authorization']?.split(' ')[1];
-  if (!token) {
-    return res.status(401).json({ message: 'Unauthorized' });
+db.connect((err) => {
+  if (err) {
+    console.error('Error connecting to the database:', err);
+    return;
   }
-  jwt.verify(token, 'your_jwt_secret', (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ message: 'Token is not valid' });
+  console.log('Connected to the database');
+});
+
+// SignUp Route
+app.post('/api/signup', async (req, res) => {
+  const { name, email, password } = req.body;
+
+  if (!name || !email || !password) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
+
+  try {
+    // Check if the email already exists
+    db.query('SELECT * FROM users WHERE email = ?', [email], async (err, result) => {
+      if (err) return res.status(500).json({ message: 'Database error' });
+
+      if (result.length > 0) {
+        return res.status(400).json({ message: 'Email already exists' });
+      }
+
+      // Hash the password before storing it
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Insert new user into the database
+      db.query('INSERT INTO users (name, email, password) VALUES (?, ?, ?)', [name, email, hashedPassword], (err) => {
+        if (err) {
+          return res.status(500).json({ message: 'Error saving user' });
+        }
+        res.status(201).json({ message: 'User created successfully' });
+      });
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// SignIn Route
+app.post('/api/signin', (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Email and password are required' });
+  }
+
+  db.query('SELECT * FROM users WHERE email = ?', [email], async (err, result) => {
+    if (err) return res.status(500).json({ message: 'Database error' });
+
+    if (result.length === 0) {
+      return res.status(400).json({ message: 'User not found' });
     }
-    res.json(employees);
+
+    const user = result[0];
+
+    // Compare password with hashed password in DB
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
+
+    // Generate a JWT token
+    const token = jwt.sign({ id: user.id, email: user.email }, 'your_jwt_secret', { expiresIn: '1h' });
+    res.status(200).json({ message: 'Login successful', token });
   });
 });
 
-// Route to generate PDF (protected with password)
-app.get('/api/download-pdf', (req, res) => {
-  const password = req.query.password;
-  if (password !== '12345') {
-    return res.status(403).json({ message: 'Forbidden: Incorrect password' });
-  }
-
-  const doc = new pdfkit();
-  res.setHeader('Content-disposition', 'attachment; filename=employees.pdf');
-  res.setHeader('Content-type', 'application/pdf');
-  doc.pipe(res);
-
-  doc.text('Employee Records');
-  employees.forEach((employee) => {
-    doc.text(`Name: ${employee.name}, Department: ${employee.department}, Salary: ${employee.salary}`);
-  });
-  doc.end();
-});
-
-// Route for bulk upload (Excel)
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
-
-app.post('/api/upload-excel', upload.single('file'), (req, res) => {
-  const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
-  const sheet_name_list = workbook.SheetNames;
-  const xlData = xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
-  employees = [...employees, ...xlData];
-  res.status(200).json({ message: 'Bulk upload successful' });
-});
-
-// Server
+// Start server
 app.listen(5000, () => {
   console.log('Server running on port 5000');
 });

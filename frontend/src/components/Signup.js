@@ -1,43 +1,87 @@
+// SignUp.js (React component)
 import React, { useState } from 'react';
-import './signup.css'; // Import the SignUp specific CSS
+import './signup.css';
 
 function SignUp() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
 
-  const handleSignUp = () => {
-    // Dummy Sign Up logic (you can replace with an actual API call)
-    console.log('User Signed Up with:', { name, email, password });
-    // Redirect to Sign In page after successful sign up
-    alert('Sign up successful!');
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (formData.password !== formData.confirmPassword) {
+      alert('Passwords do not match!');
+      return;
+    }
+
+    // Make API call to backend to register the user
+    const userData = {
+      name: formData.name,
+      email: formData.email,
+      password: formData.password,
+    };
+
+    // Add your API call logic here (e.g., using fetch or axios)
+    console.log('User data submitted:', userData);
   };
 
   return (
-    <div className="signup-container">
-      <h2>Sign Up</h2>
-      <form onSubmit={(e) => e.preventDefault()}>
+    <div className="form-container">
+      <form onSubmit={handleSubmit} className="form">
+        <h2>Sign Up</h2>
+        <label htmlFor="name">Name</label>
         <input
           type="text"
-          placeholder="Full Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          id="name"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          required
         />
+        
+        <label htmlFor="email">Email</label>
         <input
           type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          id="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          required
         />
+        
+        <label htmlFor="password">Password</label>
         <input
           type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          id="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          required
         />
-        <button type="submit" onClick={handleSignUp}>
-          Sign Up
-        </button>
+        
+        <label htmlFor="confirmPassword">Confirm Password</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          name="confirmPassword"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+          required
+        />
+
+        <button type="submit">Sign Up</button>
       </form>
     </div>
   );

@@ -1,53 +1,59 @@
+// SignIn.js (React component)
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './signin.css'; // Import the SignIn specific CSS
+import './signin.css';
 
 function SignIn() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(false); // To track invalid credentials
-  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
 
-  const handleSignIn = () => {
-    // Dummy check for valid credentials (you can replace with an actual API call)
-    if (email !== 'test@example.com' || password !== 'password123') {
-      setError(true);
-    } else {
-      // If valid, redirect to dashboard or another page
-      navigate('/dashboard');
-    }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
-  const handleSignUpClick = () => {
-    navigate('/signup'); // Redirect to Sign Up page if invalid credentials
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    const userData = {
+      email: formData.email,
+      password: formData.password,
+    };
+
+    // Add your API call logic here (e.g., using fetch or axios)
+    console.log('Sign in data submitted:', userData);
   };
 
   return (
-    <div className="signin-container">
-      <h2>Sign In</h2>
-      <form onSubmit={(e) => e.preventDefault()}>
+    <div className="form-container">
+      <form onSubmit={handleSubmit} className="form">
+        <h2>Sign In</h2>
+        <label htmlFor="email">Email</label>
         <input
           type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          id="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          required
         />
+        
+        <label htmlFor="password">Password</label>
         <input
           type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          id="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          required
         />
-        <button type="submit" onClick={handleSignIn}>
-          Sign In
-        </button>
+
+        <button type="submit">Sign In</button>
       </form>
-      {error && (
-        <div className="error-message">
-          <p>Invalid credentials. Do you need to sign up?</p>
-          <button onClick={handleSignUpClick}>Go to Sign Up</button>
-        </div>
-      )}
     </div>
   );
 }
