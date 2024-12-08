@@ -1,0 +1,239 @@
+/* General App Styles */
+.App {
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Sign In and Sign Up Styles */
+.signin-container, .signup-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 30px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: #f9f9f9;
+  font-family: 'Arial', sans-serif;
+}
+
+.signin-container h2, .signup-container h2 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+form input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+form input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+form button {
+  width: 100%;
+  padding: 12px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form button:hover {
+  background-color: #218838;
+}
+
+form button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+form a {
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #007bff;
+  text-decoration: none;
+}
+
+form a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .signin-container, .signup-container {
+    padding: 20px;
+  }
+}
+
+/* Dashboard Styles */
+.dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px;
+  background-color: #f9f9f9;
+}
+
+.dashboard-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #007bff;
+  padding: 15px;
+  border-radius: 5px;
+  color: white;
+}
+
+.dashboard-nav .dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dashboard-nav .dropdown button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.dashboard-nav .dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  z-index: 1;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}
+
+.dashboard-nav .dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dashboard-nav .dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  font-size: 16px;
+}
+
+.dashboard-nav .dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.dashboard-nav button.logout {
+  background-color: #dc3545;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.dashboard-nav button.logout:hover {
+  background-color: #c82333;
+}
+
+h1 {
+  color: #333;
+  font-size: 28px;
+  margin-top: 20px;
+}
+
+/* Employee Table */
+.employee-table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+  border: 1px solid #ccc;
+}
+
+.employee-table th, .employee-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.employee-table th {
+  background-color: #007bff;
+  color: white;
+}
+
+.employee-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 8px 16px;
+  margin: 0 5px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.pagination button:hover {
+  background-color: #0056b3;
+}
+
+.pagination button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
