@@ -65,6 +65,12 @@ const ViewAll = () => {
       </nav>
 
       <h2 style={styles.heading}>View All Employee Records</h2>
+      
+      {/* Display total number of employees */}
+      <div style={styles.totalEmployees}>
+        <p>Total Employees: {totalEmployees}</p>
+      </div>
+
       <table style={styles.table}>
         <thead>
           <tr>
@@ -121,6 +127,10 @@ const styles = {
     fontSize: "24px",
     fontWeight: "bold",
     marginBottom: "20px",
+  },
+  totalEmployees: {
+    marginBottom: "20px",
+    fontSize: "18px",
   },
   table: {
     width: "100%",
