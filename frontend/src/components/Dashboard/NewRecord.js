@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+
 const NewRecord = () => {
   const [employee, setEmployee] = useState({
     name: "",
@@ -11,13 +12,28 @@ const NewRecord = () => {
     setEmployee({ ...employee, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Send employee data to the backend (e.g., via Axios)
-    console.log("Employee Added: ", employee);
-    alert("Employee added successfully!");
-    setEmployee({ name: "", department: "", salary: "" });
+    try {
+      const response = await fetch('http://localhost:5000/api/employees', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(employee),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        console.error('Backend Error:', data);
+        alert(data.message || 'Error adding employee');
+      } else {
+        alert('Employee added successfully!');
+        setEmployee({ name: '', department: '', salary: '' });
+      }
+    } catch (error) {
+      console.error('Request Error:', error);
+      alert('Error connecting to the backend');
+    }
   };
+  
 
   return (
     <div style={{ padding: "20px" }}>

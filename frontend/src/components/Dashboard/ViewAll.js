@@ -1,84 +1,150 @@
 import React, { useState, useEffect } from "react";
+import { jsPDF } from "jspdf";
 
 const ViewAll = () => {
   const [employees, setEmployees] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 5;
+  const [totalEmployees, setTotalEmployees] = useState(0);
 
   useEffect(() => {
-    // Fetch data from the backend
     const fetchEmployees = async () => {
-      // Replace with your API call
-      const mockData = [
-        { id: 1, name: "John", department: "HR", salary: 50000 },
-        { id: 2, name: "Doe", department: "IT", salary: 60000 },
-        { id: 3, name: "Jane", department: "Finance", salary: 55000 },
-      ];
-      setEmployees(mockData);
+      try {
+        // Fetch all records (limit = 'all')
+        const response = await fetch(
+          `http://localhost:5000/api/employees?limit=all` // Updated to fetch all employees
+        );
+        const data = await response.json();
+        if (response.ok) {
+          setEmployees(data.employees); // Assuming `data.employees` contains all the employee records
+          setTotalEmployees(data.total || data.employees.length); // Use the total from backend response
+        } else {
+          alert(data.message || "Error fetching employees");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Error fetching employees");
+      }
     };
+
     fetchEmployees();
   }, []);
 
   const handleDownloadPDF = () => {
+    const doc = new jsPDF();
+    doc.text("Employee Records", 10, 10);
+    let yPosition = 20;
+
+    doc.text("ID", 10, yPosition);
+    doc.text("Name", 30, yPosition);
+    doc.text("Department", 70, yPosition);
+    doc.text("Salary", 120, yPosition);
+    yPosition += 10;
+
+    employees.forEach((employee) => {
+      doc.text(employee.id.toString(), 10, yPosition);
+      doc.text(employee.name, 30, yPosition);
+      doc.text(employee.department, 70, yPosition);
+      doc.text(employee.salary.toString(), 120, yPosition);
+      yPosition += 10;
+    });
+
+    doc.save("employees.pdf");
     alert("Downloading password-protected PDF (Pwd:12345)...");
-    // Call backend API to generate and download the PDF
   };
 
   const handleEdit = (id) => {
     alert(`Edit employee with ID: ${id}`);
-    // Redirect or open a modal for editing
   };
 
-  const indexOfLastRecord = currentPage * recordsPerPage;
-  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const currentRecords = employees.slice(indexOfFirstRecord, indexOfLastRecord);
-
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>View All Records</h2>
-      <table border="1" style={{ width: "100%", marginBottom: "20px" }}>
+    <div style={styles.container}>
+      {/* Navbar */}
+      <nav style={styles.navbar}>
+        <div style={styles.navItem}>Home</div>
+        <div style={styles.navItem}>Employees</div>
+        <div style={styles.navItem}>Contact</div>
+      </nav>
+
+      <h2 style={styles.heading}>View All Employee Records</h2>
+      <table style={styles.table}>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Department</th>
-            <th>Salary</th>
-            <th>Actions</th>
+            <th style={styles.tableHeader}>ID</th>
+            <th style={styles.tableHeader}>Name</th>
+            <th style={styles.tableHeader}>Department</th>
+            <th style={styles.tableHeader}>Salary</th>
+            <th style={styles.tableHeader}>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {currentRecords.map((employee) => (
+          {employees.map((employee) => (
             <tr key={employee.id}>
-              <td>{employee.id}</td>
-              <td>{employee.name}</td>
-              <td>{employee.department}</td>
-              <td>{employee.salary}</td>
-              <td>
-                <button onClick={() => handleEdit(employee.id)}>Edit</button>
+              <td style={styles.tableCell}>{employee.id}</td>
+              <td style={styles.tableCell}>{employee.name}</td>
+              <td style={styles.tableCell}>{employee.department}</td>
+              <td style={styles.tableCell}>{employee.salary}</td>
+              <td style={styles.tableCell}>
+                <button
+                  onClick={() => handleEdit(employee.id)}
+                  style={styles.button}
+                >
+                  Edit
+                </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <button onClick={handleDownloadPDF}>Download PDF</button>
-      <div>
-        <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}>
-          Previous
-        </button>
-        <button
-          onClick={() =>
-            setCurrentPage((prev) =>
-              prev < Math.ceil(employees.length / recordsPerPage)
-                ? prev + 1
-                : prev
-            )
-          }
-        >
-          Next
-        </button>
-      </div>
+      <button onClick={handleDownloadPDF} style={styles.button}>
+        Download PDF
+      </button>
     </div>
   );
+};
+
+const styles = {
+  container: {
+    padding: "20px",
+    fontFamily: "'Arial', sans-serif",
+  },
+  navbar: {
+    display: "flex",
+    justifyContent: "space-around",
+    backgroundColor: "#333",
+    color: "#fff",
+    padding: "10px 0",
+  },
+  navItem: {
+    cursor: "pointer",
+    fontSize: "18px",
+  },
+  heading: {
+    fontSize: "24px",
+    fontWeight: "bold",
+    marginBottom: "20px",
+  },
+  table: {
+    width: "100%",
+    borderCollapse: "collapse",
+    marginBottom: "20px",
+  },
+  tableHeader: {
+    backgroundColor: "#f4f4f4",
+    padding: "10px",
+    textAlign: "left",
+  },
+  tableCell: {
+    padding: "10px",
+    borderBottom: "1px solid #ddd",
+  },
+  button: {
+    backgroundColor: "#4CAF50",
+    color: "white",
+    padding: "10px 20px",
+    margin: "10px 0",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+  },
 };
 
 export default ViewAll;

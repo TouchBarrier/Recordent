@@ -1,21 +1,20 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './home.css'; // Import CSS for home page styling
+import './home.css';
 
 function Home() {
   const navigate = useNavigate();
 
   const handleSignInClick = () => {
-    navigate('/signin'); // Redirect to SignIn page
+    navigate('/signin'); 
   };
 
   const handleSignUpClick = () => {
-    navigate('/signup'); // Redirect to SignUp page
+    navigate('/signup'); 
   };
 
   return (
     <div>
-      {/* Header Section */}
       <header className="header">
         <div className="logo">
           <h1>Recordant</h1>
@@ -30,10 +29,12 @@ function Home() {
         </div>
       </header>
 
-      {/* Main Content Section */}
       <div className="home-container">
         <h1>Welcome to Recordant</h1>
         <p>Please sign in or sign up to continue.</p>
+        <button className="btn" onClick={handleSignUpClick}>
+          Get Started
+        </button>
       </div>
     </div>
   );

@@ -1,53 +1,138 @@
-.dashboard-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 30px;
-    background-color: #f9f9f9;
+/* dashboard.css */
+body {
+  font-family: Arial, sans-serif;
+}
+
+nav {
+  background-color: #333;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav .dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+nav .dropbtn {
+  background-color: #333;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+}
+
+nav .dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+nav .dropdown:hover .dropdown-content {
+  display: block;
+}
+
+nav .dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+nav .dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+button {
+  padding: 10px 15px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #e41e18;
+}
+
+h1 {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.bulk-upload {
+  margin: 20px;
+  text-align: center;
+}
+
+.bulk-upload input[type="file"] {
+  margin: 10px;
+}
+
+.bulk-upload button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.bulk-upload button:hover {
+  background-color: #45a049;
+}
+
+table {
+  width: 100%;
+  margin: 20px 0;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+table th, table td {
+  padding: 12px;
+  border: 1px solid #ddd;
+}
+
+table th {
+  background-color: #f2f2f2;
+}
+
+@media screen and (max-width: 768px) {
+  nav {
+    flex-direction: column;
+    align-items: flex-start;
   }
-  
-  .dashboard-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #007bff;
-    padding: 15px;
-    border-radius: 5px;
-    color: white;
+
+  nav .dropdown-content {
+    position: static;
+    width: 100%;
   }
-  
-  .dashboard-nav .dropdown {
-    position: relative;
+
+  table, .bulk-upload {
+    width: 100%;
+    margin: 10px 0;
   }
-  
-  .dashboard-nav .dropdown button {
-    background-color: #007bff;
-    color: white;
-    border: none;
+
+  button {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  nav {
     padding: 10px;
-    border-radius: 5px;
   }
-  
-  .dashboard-nav .dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f1f1f1;
-    min-width: 160px;
-    z-index: 1;
+
+  .bulk-upload input[type="file"], .bulk-upload button {
+    width: 100%;
   }
-  
-  .dashboard-nav .dropdown:hover .dropdown-content {
-    display: block;
+
+  table th, table td {
+    padding: 8px;
   }
-  
-  .dashboard-nav .dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    display: block;
-  }
-  
-  .dashboard-nav button.logout {
-    background-color: #dc3545;
-    padding: 10px;
-    border-radius: 5px;
-  }
-  
+}
